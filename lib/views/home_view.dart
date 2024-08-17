@@ -6,10 +6,12 @@ import '../bloc/auth_state.dart';
 import 'login_view.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 22, 23, 43),
+      backgroundColor: const Color.fromARGB(255, 22, 23, 43),
       appBar: AppBar(
         title: const Text('Home Page'),
         actions: [
@@ -26,8 +28,8 @@ class HomePage extends StatelessWidget {
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
+          //return login_view 
           if (state is AuthUnauthenticated) {
-            print('listener run');
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
@@ -38,7 +40,7 @@ class HomePage extends StatelessWidget {
           if (state is HomeState) {
             return RefreshIndicator(
               onRefresh: () async {
-                // Reset the list to show the initial 10 items
+                // Refresh the list
                 BlocProvider.of<AuthBloc>(context).add(RefreshList());
               },
               child: Container(
@@ -51,7 +53,7 @@ class HomePage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           if (index == state.items.length) {
                             return state.hasReachedMax
-                              ? SizedBox.shrink()
+                              ? const SizedBox.shrink()
                               : Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                                   child: Center(
@@ -59,13 +61,13 @@ class HomePage extends StatelessWidget {
                                       onPressed: () {
                                         BlocProvider.of<AuthBloc>(context).add(LoadMoreItems());
                                       },
-                                      child: Text("Show More List", style: TextStyle(color: Colors.grey),),
+                                      child: const Text("Show More List", style: TextStyle(color: Colors.grey),),
                                     ),
                                   ),
                                 );
                           }
                           return Padding(
-                            padding: EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.only(bottom: 8),
                             child: Container(
                               height: 50,
                               decoration: BoxDecoration(

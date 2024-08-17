@@ -24,30 +24,25 @@ class MyApp extends StatelessWidget {
         title: 'Login App',
         theme: ThemeData(
           useMaterial3: true,
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Color.fromARGB(255, 22, 23, 43),  // Màu nền mặc định
+          scaffoldBackgroundColor: const Color.fromARGB(255, 22, 23, 43),
           textTheme: Theme.of(context).textTheme.apply(
             bodyColor: Colors.grey,
             displayColor: Colors.grey,
           ),
           appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFF16172B), // Màu nền của AppBar
+            backgroundColor: Color(0xFF16172B),
             titleTextStyle: TextStyle(color: Colors.grey, fontSize: 20),
-            iconTheme: IconThemeData(color: Colors.grey), // Màu biểu tượng trên AppBar
-          ),
-          buttonTheme: const ButtonThemeData(
-            buttonColor: Colors.blue, // Màu nền nút bấm
-            textTheme: ButtonTextTheme.primary, // Màu chữ trên nút bấm
+            iconTheme: IconThemeData(color: Colors.grey),
           ),
         ),
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthAuthenticated) {
-              return HomePage();
+              return const HomePage();
             } else if (state is AuthUnauthenticated) {
               return LoginPage();
             }
-            return Scaffold(body: Center(child: CircularProgressIndicator()));
+            return LoginPage();
           },
         ),
       ),

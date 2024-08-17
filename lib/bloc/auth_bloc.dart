@@ -12,42 +12,42 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoggedIn>(_onLoggedIn);
     on<LoggedOut>(_onLoggedOut);
     on<LoadMoreItems>(_onLoadMoreItems);
-    on<RefreshList>(_onRefreshList); // Add this line
+    on<RefreshList>(_onRefreshList);
   }
 
+  //Check Login Status when start app
   void _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
     final isLoggedIn = await _loginViewModel.checkLoginStatus();
     if (isLoggedIn) {
-      
-    print("Logged in");
       emit(HomeState(items: _allItems.take(10).toList()));
     } else {
       emit(AuthUnauthenticated());
-      print("Logged out");
     }
   }
 
+  //Press button Login
   void _onLoggedIn(LoggedIn event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
     try {
       final success = await _loginViewModel.login(event.email, event.password);
       if (success) {
         emit(HomeState(items: _allItems.take(10).toList()));
       } else {
         emit(AuthFailure('Invalid email or password'));
+        emit (AuthUnauthenticated());
       }
     } catch (error) {
       emit(AuthFailure('An error occurred'));
+      emit (AuthUnauthenticated());
     }
   }
 
+  //Press button logout
   void _onLoggedOut(LoggedOut event, Emitter<AuthState> emit) async {
     await _loginViewModel.logout();
-    print("Logged out, emitting AuthUnauthenticated");
     emit(AuthUnauthenticated());
   }
 
-
+  //Show more list
   void _onLoadMoreItems(LoadMoreItems event, Emitter<AuthState> emit) {
     final currentState = state;
     if (currentState is HomeState && !currentState.hasReachedMax) {
@@ -59,6 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  //pull down to refresh 
   void _onRefreshList(RefreshList event, Emitter<AuthState> emit) {
     emit(HomeState(items: _allItems.take(10).toList()));
   }
